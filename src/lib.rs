@@ -1,10 +1,13 @@
 use cfg_if::cfg_if;
 pub mod app;
+pub mod components;
 pub mod dark_mode;
 pub mod error_template;
 pub mod fileserv;
-pub mod two_phase_commit;
+pub mod graphics;
+pub mod two_phase;
 
+pub mod model;
 cfg_if! { if #[cfg(feature = "hydrate")] {
     use leptos::*;
     use wasm_bindgen::prelude::wasm_bindgen;

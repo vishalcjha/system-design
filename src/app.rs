@@ -1,7 +1,6 @@
 use crate::{
-    dark_mode::DarkmodeToggle,
     error_template::{AppError, ErrorTemplate},
-    two_phase_commit::TwoPhaseCommit,
+    two_phase::two_phase_commit::TwoPhaseCommit,
 };
 use leptos::*;
 use leptos_meta::*;
@@ -20,7 +19,7 @@ pub fn App() -> impl IntoView {
         <Stylesheet id="leptos" href="/pkg/system-design.css"/>
 
         // sets the document title
-        <Title text="Welcome to Leptos"/>
+        <Title text="System Design with Fun"/>
 
         // content for this welcome page
         <Router fallback=|| {

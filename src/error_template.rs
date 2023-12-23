@@ -10,12 +10,15 @@ use leptos_axum::ResponseOptions;
 pub enum AppError {
     #[error("Not Found")]
     NotFound,
+    #[error("We are working on it !!!")]
+    ComingSoon,
 }
 
 impl AppError {
     pub fn status_code(&self) -> StatusCode {
         match self {
             AppError::NotFound => StatusCode::NOT_FOUND,
+            AppError::ComingSoon => StatusCode::NOT_IMPLEMENTED,
         }
     }
 }

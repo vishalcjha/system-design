@@ -1,10 +1,6 @@
 use leptos::*;
 use leptos_meta::Meta;
 
-fn get_dark_mode_from_storage() -> Option<bool> {
-    todo!()
-}
-
 #[component]
 pub fn DarkmodeToggle() -> impl IntoView {
     let (prefers_dark, set_prefers_dark) = create_signal(false);
