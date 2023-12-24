@@ -1,11 +1,22 @@
 body {
 	font-family: sans-serif;
-	text-align: center;
 	display: flex;
 	min-height: 100vh;
 	margin: 0;
+	position: absolute;
+	background: transparent;
+}
+
+#overlay {
+	text-align: center;
 	justify-content: center;
 	align-items: center;
+}
+
+#canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
 }
 
 /* Basic Card Styles */
@@ -51,8 +62,8 @@ body {
 	box-sizing: border-box;
 	border: none;
 	border-radius: 4px;
-	padding: 0 16px;
-	min-width: 64px;
+	padding: 0 0px;
+	min-width: 100px;
 	height: 36px;
 	vertical-align: middle;
 	text-align: center;
@@ -192,8 +203,9 @@ body {
 /* Container for the Grid */
 .grid-container {
 	display: grid;
-	grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 8), 1fr));
+	// grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
 	// grid-template-rows: repeat(8, minmax(min(100%, 8rem), 1fr));
-	gap: 20px;
+	gap: 16px;
 	/* Adjust the gap between cards */
 }
