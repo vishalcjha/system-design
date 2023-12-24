@@ -25,15 +25,15 @@ impl Compute {
         }
     }
 
-    pub fn new_client(pos: Pos) -> Compute {
+    pub fn new_client(pos: Pos, num: u32) -> Compute {
         Compute {
             pos,
             status: Status::Up,
-            compute_type: ComputeType::Client,
+            compute_type: ComputeType::Client(num),
         }
     }
 
-    fn to_down_compute(&mut self) {
+    pub fn to_down_compute(&mut self) {
         self.status = Status::Down;
     }
 }
@@ -41,5 +41,5 @@ impl Compute {
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ComputeType {
     Server,
-    Client,
+    Client(u32),
 }

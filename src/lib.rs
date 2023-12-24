@@ -5,7 +5,7 @@ pub mod dark_mode;
 pub mod error_template;
 pub mod fileserv;
 pub mod graphics;
-pub mod two_phase;
+mod topic;
 
 pub mod model;
 cfg_if! { if #[cfg(feature = "hydrate")] {

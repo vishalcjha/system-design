@@ -1,6 +1,6 @@
 use crate::{
     error_template::{AppError, ErrorTemplate},
-    two_phase::two_phase_commit::TwoPhaseCommit,
+    topic::two_phase::two_phase_commit::TwoPhaseCommit,
 };
 use leptos::*;
 use leptos_meta::*;

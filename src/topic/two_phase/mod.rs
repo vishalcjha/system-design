@@ -1,8 +1,19 @@
 use std::collections::HashMap;
 
-use crate::{graphics::find_element_pos, model::dom_position::DomPosition};
+use crate::{
+    graphics::find_element_pos,
+    model::{
+        compute::{Compute, Pos},
+        dom_position::DomPosition,
+    },
+};
+
+use super::scenario::Scenario;
 
 mod all_good_scenario;
+mod client_deny_scenario;
+pub mod one_client_down;
+pub mod server_down;
 pub mod two_phase_commit;
 
 #[derive(Debug, Clone)]
@@ -49,4 +60,28 @@ impl PositionHolder {
     pub(super) fn client_two_pos(&self) -> &DomPosition {
         self.positions.get(PositionHolder::CLIENT_TWO).unwrap()
     }
+}
+
+trait ComputeStatusChanger: Scenario {
+    fn status_updater(&self, _computes: &Vec<(String, Compute)>) -> Option<Vec<(String, Compute)>> {
+        None
+    }
+}
+
+fn get_computes() -> Vec<(String, Compute)> {
+    let stable_computes = vec![
+        (
+            String::from(PositionHolder::SERVER),
+            Compute::new_server(Pos(4, 4)),
+        ),
+        (
+            String::from(PositionHolder::CLIENT_ONE),
+            Compute::new_client(Pos(4, 1), 1),
+        ),
+        (
+            String::from(PositionHolder::CLIENT_TWO),
+            Compute::new_client(Pos(4, 8), 2),
+        ),
+    ];
+    stable_computes
 }
