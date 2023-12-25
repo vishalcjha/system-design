@@ -8,7 +8,7 @@ use crate::{
     },
 };
 mod arrow_head;
-mod circle_tag;
+pub(crate) mod circle_tag;
 use leptos::{document, window};
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
@@ -75,13 +75,13 @@ fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
 
         current_progress += progress;
 
-        request_animation_frame(f.borrow().as_ref().unwrap());
+        request_animation_frame_custom(f.borrow().as_ref().unwrap());
     }));
 
-    request_animation_frame(g.borrow().as_ref().unwrap());
+    request_animation_frame_custom(g.borrow().as_ref().unwrap());
 }
 
-fn canvas_context() -> CanvasRenderingContext2d {
+pub(crate) fn canvas_context() -> CanvasRenderingContext2d {
     canvas()
         .get_context("2d")
         .unwrap()
@@ -90,7 +90,7 @@ fn canvas_context() -> CanvasRenderingContext2d {
         .unwrap()
 }
 
-fn canvas() -> HtmlCanvasElement {
+pub fn canvas() -> HtmlCanvasElement {
     let canvas = document().get_element_by_id("canvas").unwrap();
     canvas.dyn_into::<web_sys::HtmlCanvasElement>().unwrap()
 }
@@ -100,7 +100,7 @@ pub fn clear_canvas() {
     canvas_context().clear_rect(0., 0., canvas.width() as f64, canvas.height() as f64);
 }
 
-fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+pub fn request_animation_frame_custom(f: &Closure<dyn FnMut()>) {
     window()
         .request_animation_frame(f.as_ref().unchecked_ref())
         .expect("should register `requestAnimationFrame` OK");

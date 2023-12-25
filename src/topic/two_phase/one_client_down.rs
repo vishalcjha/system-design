@@ -49,7 +49,7 @@ impl OneClientDown {
         let mut server_to_client_one_bidirectional =
             server_to_client_one_arrow.with_offset(Offset(8));
         server_to_client_one_bidirectional.directional = Directional::BiDirectional;
-        steps.push(vec![server_to_client_one_bidirectional]);
+        steps.push(vec![server_to_client_one_bidirectional.reverse()]);
 
         OneClientDown {
             steps,

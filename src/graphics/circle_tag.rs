@@ -1,6 +1,6 @@
 use web_sys::CanvasRenderingContext2d;
 
-pub(super) fn draw_wrapped_number(
+pub(crate) fn draw_wrapped_number(
     context: &CanvasRenderingContext2d,
     center_x: f64,
     center_y: f64,
