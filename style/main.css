@@ -2,15 +2,47 @@ body {
 	font-family: sans-serif;
 	display: flex;
 	min-height: 100vh;
+	height: 100%;
 	margin: 0;
-	position: absolute;
+	position: relative;
 	background: transparent;
-}
-
-#overlay {
 	text-align: center;
 	justify-content: center;
 	align-items: center;
+}
+
+#main {
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+#page-container {
+	display: flex;
+}
+
+@media (orientation: landscape) {
+	#page-container {
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#page-container>* {
+		flex: 1;
+	}
+}
+
+@media (orientation: portrait) {
+	#page-container {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#page-container>* {
+		flex: 1;
+	}
 }
 
 #canvas {
@@ -221,9 +253,11 @@ select {
 .grid-container {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 8), 1fr));
-	// grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
-	// grid-template-rows: repeat(8, minmax(min(100%, 8rem), 1fr));
 	gap: 10px;
+	top: 0;
+	left: 0;
+	width: max-content;
+
 	/* Adjust the gap between cards */
 }
 
@@ -231,8 +265,9 @@ select {
 .grid-container-16 {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 16), 1fr));
-	// grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
-	// grid-template-rows: repeat(8, minmax(min(100%, 8rem), 1fr));
 	gap: 5px;
+	top: 0;
+	left: 0;
+	width: max-content;
 	/* Adjust the gap between cards */
 }

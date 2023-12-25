@@ -29,7 +29,6 @@ pub(crate) fn draw_lines_concurrently(arrows: Vec<&Arrow>, batch_number: u32) {
     for arrow in arrows {
         draw_line_progressively(arrow.clone(), 0.03, batch_number);
     }
-    // while let Ok(_) = rx.recv_timeout(Duration::from_millis(500)) {}
 }
 
 fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
@@ -98,6 +97,10 @@ pub fn canvas() -> HtmlCanvasElement {
 pub fn clear_canvas() {
     let canvas = canvas();
     canvas_context().clear_rect(0., 0., canvas.width() as f64, canvas.height() as f64);
+    let width = window().inner_width().unwrap().as_f64().unwrap() as u32;
+    let height = window().inner_height().unwrap().as_f64().unwrap() as u32;
+    canvas.set_width(width);
+    canvas.set_height(height);
 }
 
 pub fn request_animation_frame_custom(f: &Closure<dyn FnMut()>) {

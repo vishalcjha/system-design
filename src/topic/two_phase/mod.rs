@@ -71,12 +71,12 @@ trait ComputeStatusChanger: Scenario {
 fn get_computes() -> Vec<(String, Compute)> {
     let stable_computes = vec![
         (
-            String::from(PositionHolder::SERVER),
-            Compute::new_server(Pos(4, 4)),
-        ),
-        (
             String::from(PositionHolder::CLIENT_ONE),
             Compute::new_client(Pos(4, 1), 1),
+        ),
+        (
+            String::from(PositionHolder::SERVER),
+            Compute::new_server(Pos(4, 4)),
         ),
         (
             String::from(PositionHolder::CLIENT_TWO),

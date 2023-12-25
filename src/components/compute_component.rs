@@ -11,10 +11,10 @@ pub fn ComputeComponent(compute: Compute, id: String) -> impl IntoView {
     } = compute;
     view! {
      <div id={id} class="square-card"
-        style:grid-column = move || format!("{}", pos.1)
-        style:grid-row = move || format!("{}", pos.0)
+        // style:grid-column = move || format!("{}", pos.1)
+        // style:grid-row = move || format!("{}", pos.0)
     >
-        <img class="img" src="/server.png" alt="Compute Image"/>
+        <img class="img" src="/public/server.png" alt="Compute Image"/>
         <img class="icon" src={get_status_img(&status)} alt="Compute Statue"/>
         <label class="label">{get_label(&compute_type)}</label>
      </div>
@@ -30,7 +30,7 @@ fn get_label(compute_type: &ComputeType) -> String {
 
 fn get_status_img(status: &Status) -> &'static str {
     match status {
-        Status::Up => "/ok.png",
-        Status::Down => "/down.png",
+        Status::Up => "/public/ok.png",
+        Status::Down => "/public/down.png",
     }
 }

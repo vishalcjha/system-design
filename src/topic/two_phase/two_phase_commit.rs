@@ -90,27 +90,34 @@ pub fn TwoPhaseCommit() -> impl IntoView {
     };
 
     view! {
-        <div class="grid-container" id="two_phase_commit">
-        {move || computes().into_iter().map(|compute|
-            view! {
-                <ComputeComponent compute={compute.1} id={compute.0} />
-            }
-        ).collect_view()}
+        <div id="page-container">
+        <div id="first" style="display:flex; flex-direction: column; flex: 1;">
+            <div style="display:flex; flex-direction: row; justify-content: space-between;">
+            {move || computes().into_iter().map(|compute|
+                view! {
+                    <ComputeComponent compute={compute.1} id={compute.0} />
+                }
+            ).collect_view()}
+            </div>
 
-        <Show
-            when= move || has_scenario()
-            fallback=move || view! {
-                <select id="scenario_selector" style="grid-row:10; grid-column:4" on:change=selector_change_handler >
-                <option value="">Select Scenario</option>
-                  <option value="all_good">All Good Scenario</option>
-                  <option value="client_deny">Client Deny Scenario</option>
-                  <option value="server_down">Server Down Scenario</option>
-                  <option value="client_down">Client Down Scenario</option>
-              </select>
-            }
-        >
-        <button class="button" style="grid-row:10; grid-column:4" on:click=button_handler>{button_label}</button>
-        </Show>
+            <Show
+                when= move || has_scenario()
+                fallback=move || view! {
+                    <select id="scenario_selector"  on:change=selector_change_handler >
+                    <option value="">Select Scenario</option>
+                    <option value="all_good">All Good Scenario</option>
+                    <option value="client_deny">Client Deny Scenario</option>
+                    <option value="server_down">Server Down Scenario</option>
+                    <option value="client_down">Client Down Scenario</option>
+                </select>
+                }
+            >
+            <button class="button"  on:click=button_handler>{button_label}</button>
+            </Show>
+        </div>
+        <div id="second" style="flex: 1;">
+            <p> descript what is going on </p>
+        </div>
         </div>
     }
 }
