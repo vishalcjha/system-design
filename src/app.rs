@@ -1,6 +1,7 @@
 use crate::{
     error_template::{AppError, ErrorTemplate},
-    topic::two_phase::two_phase_commit::TwoPhaseCommit,
+    graphics::clear_canvas,
+    topic::{two_phase::two_phase_commit::TwoPhaseCommit, uber::uber_component::UberComponent},
 };
 use leptos::*;
 use leptos_meta::*;
@@ -61,6 +62,7 @@ pub fn App() -> impl IntoView {
             <Routes>
                 <Route path="" view=HomePage/>
                 <Route path="/2pc" view=TwoPhaseCommit/>
+                <Route path="/uber" view=UberComponent/>
             </Routes>
         </main>
         </Router>
@@ -70,13 +72,18 @@ pub fn App() -> impl IntoView {
 /// Renders the home page of your application.
 #[component]
 fn HomePage() -> impl IntoView {
+    create_effect(|_| clear_canvas());
     view! {
         <div class="card">
             <nav> <a href="/2pc"><button class="button" type="button"> 2 Phase Commit </button> </a></nav>
         </div>
 
         <div class="card">
-        <nav> <a href="/caching"><button class="button" type="button"> Caching </button> </a></nav>
-    </div>
+            <nav> <a href="/uber"><button class="button" type="button"> Uber </button> </a></nav>
+        </div>
+
+        <div class="card">
+            <nav> <a href="/caching"><button class="button" type="button"> Caching </button> </a></nav>
+        </div>
     }
 }

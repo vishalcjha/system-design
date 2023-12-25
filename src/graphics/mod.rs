@@ -105,3 +105,25 @@ fn request_animation_frame(f: &Closure<dyn FnMut()>) {
         .request_animation_frame(f.as_ref().unchecked_ref())
         .expect("should register `requestAnimationFrame` OK");
 }
+
+pub fn draw_grid_lines(grid_count: u32) {
+    let canvas = canvas();
+    let height = canvas.height() as f64;
+    let widht = canvas.width() as f64 / 2.;
+
+    let context = canvas_context();
+    context.set_stroke_style(&JsValue::from_str("#000000")); // Line color
+    context.set_line_width(0.5);
+
+    for i in 1..=grid_count {
+        context.begin_path();
+        context.move_to(0., i as f64 * height / 16.);
+        context.line_to(widht, i as f64 * height / 16.);
+        context.stroke();
+
+        context.begin_path();
+        context.move_to(i as f64 * widht / 16., 0.);
+        context.line_to(i as f64 * widht / 16., height);
+        context.stroke();
+    }
+}

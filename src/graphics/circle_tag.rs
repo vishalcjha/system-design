@@ -5,7 +5,7 @@ pub(super) fn draw_wrapped_number(
     center_x: f64,
     center_y: f64,
     radius: f64,
-    number: u32,
+    number: impl ToString,
 ) {
     draw_circle(context, center_x, center_y, radius);
     draw_number(context, center_x, center_y, number);
@@ -24,7 +24,12 @@ pub(super) fn draw_circle(
     context.stroke();
 }
 
-fn draw_number(context: &CanvasRenderingContext2d, center_x: f64, center_y: f64, number: u32) {
+fn draw_number(
+    context: &CanvasRenderingContext2d,
+    center_x: f64,
+    center_y: f64,
+    number: impl ToString,
+) {
     context.set_font("14px Arial"); // Set font size and type
     context.set_text_align("center");
     context.set_text_baseline("middle");

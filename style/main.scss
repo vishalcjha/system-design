@@ -172,7 +172,7 @@ select {
 /* Square Card Styles */
 .square-card {
 	position: relative;
-	width: 80px;
+	width: 60px;
 	/* Default width */
 	height: 100px;
 	/* Default height */
@@ -223,6 +223,16 @@ select {
 	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 8), 1fr));
 	// grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
 	// grid-template-rows: repeat(8, minmax(min(100%, 8rem), 1fr));
-	gap: 16px;
+	gap: 10px;
+	/* Adjust the gap between cards */
+}
+
+/* Container for the Grid */
+.grid-container-16 {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 16), 1fr));
+	// grid-template-columns: repeat(8, minmax(min(100%, 8rem), 1fr));
+	// grid-template-rows: repeat(8, minmax(min(100%, 8rem), 1fr));
+	gap: 5px;
 	/* Adjust the gap between cards */
 }

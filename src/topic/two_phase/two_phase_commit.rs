@@ -30,6 +30,8 @@ pub fn TwoPhaseCommit() -> impl IntoView {
         }
     };
 
+    create_effect(|_| clear_canvas());
+
     let button_handler = move |_| {
         set_sernario.update(|scenario| {
             let mut finished = false;
