@@ -6,12 +6,10 @@ use crate::topic::uber::entity::GridComponent;
 pub fn UberComponent() -> impl IntoView {
     view! {
         <div id="page-container">
-        <div id="first">
-            <div class="grid-container-16" id="uber-component">
-            <img src="/public/uber_stream.png" alt="Compute Image" style="grid-column: 8; grid-row: 20"/>
-            <div id="uber-grid-componene">
+        <div id="first" style="display: flex; flex-direction: column;justify-content: center; align-items: center; flex=1;">
+            <img src="/public/uber_stream.png" alt="Compute Image"/>
+            <div>
                 <GridComponent/>
-            </div>
             </div>
         </div>
         <div id="second">

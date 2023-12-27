@@ -75,9 +75,15 @@ impl Car {
 }
 
 fn get_random_x_y() -> (f64, f64) {
-    let canvas = canvas();
-    let width = canvas.width() as f64 / 2.;
-    let height = canvas.height() as f64;
+    let window = window();
+    let width = window.inner_width().unwrap().as_f64().unwrap();
+    let height = window.inner_height().unwrap().as_f64().unwrap();
+    let (width, height) = if width > height {
+        (width / 2., height)
+    } else {
+        (width, height / 2.)
+    };
+
     let grid_y = height * random();
     let grid_x = width * random();
     (grid_x, grid_y)
@@ -85,9 +91,15 @@ fn get_random_x_y() -> (f64, f64) {
 
 fn get_canvas_x_y() -> (f64, f64) {
     let canvas = canvas();
-    let width = canvas.width() as f64 / 2.;
+
+    let width = canvas.width() as f64;
     let height = canvas.height() as f64;
-    (width, height)
+
+    if width > height {
+        (width / 2., height)
+    } else {
+        (width, height / 2.)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd)]
@@ -135,7 +147,10 @@ pub(super) fn GridComponent() -> impl IntoView {
         *g.borrow_mut() = Some(Closure::new(move || {
             let context = canvas_context();
             clear_canvas();
-            draw_grid_lines(16);
+            let window = window();
+            let is_landscape =
+                window.inner_width().unwrap().as_f64() > window.inner_height().unwrap().as_f64();
+            draw_grid_lines(16, is_landscape);
             for (index, person) in grid.persons.iter().enumerate() {
                 draw_wrapped_number(
                     &context,

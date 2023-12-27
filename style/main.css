@@ -31,17 +31,37 @@ body {
 	#page-container>* {
 		flex: 1;
 	}
+
+	/* Basic Card Styles */
+	.card {
+		width: 300px;
+		padding: 10px;
+		margin: 10px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		background-color: #fff;
+	}
 }
 
 @media (orientation: portrait) {
 	#page-container {
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
+		/* justify-content: center;
+		align-items: center; */
 	}
 
 	#page-container>* {
 		flex: 1;
+	}
+
+	/* Basic Card Styles */
+	.card {
+		width: 200px;
+		padding: 5px;
+		margin: 5px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		background-color: #fff;
 	}
 }
 
@@ -49,16 +69,6 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-}
-
-/* Basic Card Styles */
-.card {
-	width: 300px;
-	padding: 20px;
-	margin: 20px;
-	border-radius: 8px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	background-color: #fff;
 }
 
 /* Card Title Styles */

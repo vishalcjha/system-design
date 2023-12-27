@@ -100,23 +100,25 @@ pub fn TwoPhaseCommit() -> impl IntoView {
             ).collect_view()}
             </div>
 
-            <Show
-                when= move || has_scenario()
-                fallback=move || view! {
-                    <select id="scenario_selector"  on:change=selector_change_handler >
-                    <option value="">Select Scenario</option>
-                    <option value="all_good">All Good Scenario</option>
-                    <option value="client_deny">Client Deny Scenario</option>
-                    <option value="server_down">Server Down Scenario</option>
-                    <option value="client_down">Client Down Scenario</option>
-                </select>
-                }
-            >
-            <button class="button"  on:click=button_handler>{button_label}</button>
-            </Show>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <Show
+                    when= move || has_scenario()
+                    fallback=move || view! {
+                        <select id="scenario_selector" class="button" on:change=selector_change_handler >
+                        <option value="">Select Scenario</option>
+                        <option value="all_good">All Good Scenario</option>
+                        <option value="client_deny">Client Deny Scenario</option>
+                        <option value="server_down">Server Down Scenario</option>
+                        <option value="client_down">Client Down Scenario</option>
+                    </select>
+                    }
+                >
+                <button class="button"  on:click=button_handler>{button_label}</button>
+                </Show>
+            </div>
         </div>
-        <div id="second" style="flex: 1;">
-            <p> descript what is going on </p>
+        <div id="second" style="flex:1;">
+            <p> describe what is going on </p>
         </div>
         </div>
     }
