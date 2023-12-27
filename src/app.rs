@@ -28,14 +28,13 @@ pub fn App() -> impl IntoView {
             .into_view()
         }>
         <canvas id="canvas"/>
-        <main id="main">
-            <Routes>
-                <Route path="" view=HomePage/>
-                <Route path="/2pc" view=TwoPhaseCommit/>
-                <Route path="/geo-hash" view=GeoHashComponent/>
-                <Route path="/uber" view=UberComponent/>
-            </Routes>
-        </main>
+
+        <Routes>
+            <Route path="" view=HomePage/>
+            <Route path="/2pc" view=TwoPhaseCommit/>
+            <Route path="/geo-hash" view=GeoHashComponent/>
+            <Route path="/uber" view=UberComponent/>
+        </Routes>
         </Router>
 
     }
@@ -46,13 +45,12 @@ pub fn App() -> impl IntoView {
 fn HomePage() -> impl IntoView {
     create_effect(|_| clear_canvas());
     view! {
-        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <div class="card">
-            <nav> <a href="/2pc"><button class="button" type="button"> 2 Phase Commit </button> </a></nav>
-        </div>
-
+        <div style="display: flex; flex: 1; flex-direction: column; justify-content: center; align-self:stretch; align-items: center;">
         <div class="card">
             <nav> <a href="/geo-hash"><button class="button" type="button"> Geo Hash </button> </a></nav>
+        </div>
+        <div class="card">
+            <nav> <a href="/2pc"><button class="button" type="button"> 2 Phase Commit </button> </a></nav>
         </div>
 
         <div class="card">

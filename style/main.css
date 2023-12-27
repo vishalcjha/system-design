@@ -1,36 +1,42 @@
+html,
+body {
+	height: 100%;
+	margin: 0;
+}
+
 body {
 	font-family: sans-serif;
 	display: flex;
 	min-height: 100vh;
-	height: 100%;
-	margin: 0;
-	position: relative;
 	background: transparent;
 	text-align: center;
 	justify-content: center;
 	align-items: center;
 }
 
-#main {
+/* #main {
 	height: 100%;
 	width: 100%;
 	position: relative;
-}
+} */
 
 #page-container {
 	display: flex;
+	height: 100%;
 }
 
 @media (orientation: landscape) {
 	#page-container {
+		height: 100%;
+		width: 100%;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 	}
 
-	#page-container>* {
+	/* #page-container>* {
 		flex: 1;
-	}
+	} */
 
 	/* Basic Card Styles */
 	.card {
@@ -46,13 +52,15 @@ body {
 @media (orientation: portrait) {
 	#page-container {
 		flex-direction: column;
-		/* justify-content: center;
-		align-items: center; */
+		height: 100%;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
 	}
 
-	#page-container>* {
+	/* #page-container>* {
 		flex: 1;
-	}
+	} */
 
 	/* Basic Card Styles */
 	.card {

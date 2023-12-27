@@ -9,6 +9,7 @@ use crate::{
 };
 mod arrow_head;
 pub(crate) mod circle_tag;
+pub(crate) mod geo_hash;
 use leptos::{document, window};
 use wasm_bindgen::prelude::*;
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
@@ -30,13 +31,16 @@ pub(crate) fn draw_lines_concurrently(arrows: Vec<&Arrow>, batch_number: u32) {
         draw_line_progressively(arrow.clone(), 0.03, batch_number);
     }
 }
-
-fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
+pub(self) fn draw_simple_line(
+    (from_x, from_y): (f64, f64),
+    (to_x, to_y): (f64, f64),
+    directional: Directional,
+    progress: f64,
+    batch_number: Option<u32>,
+) {
     let context = canvas_context();
     context.set_stroke_style(&JsValue::from_str("#3498db")); // Line color
     context.set_line_width(1.5);
-
-    let ((from_x, from_y), (to_x, to_y)) = arrow.get_from_to();
 
     let f = Rc::new(RefCell::new(None));
     let g = f.clone();
@@ -54,21 +58,24 @@ fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
 
         if current_progress >= 1. {
             let _ = f.borrow_mut().take();
-            if arrow.directional != Directional::UnDirectional {
+            if directional != Directional::UnDirectional {
                 draw_arrowhead(&context, from_x, from_y, to_x, to_y);
             }
 
-            if arrow.directional == Directional::BiDirectional {
+            if directional == Directional::BiDirectional {
                 draw_arrowhead(&context, to_x, to_y, from_x, from_y);
             }
 
-            draw_wrapped_number(
-                &context,
-                from_x + (to_x - from_x) / 2.,
-                from_y + (to_y - from_y) / 2.,
-                10.,
-                batch_number,
-            );
+            if let Some(batch_number) = batch_number {
+                draw_wrapped_number(
+                    &context,
+                    from_x + (to_x - from_x) / 2.,
+                    from_y + (to_y - from_y) / 2.,
+                    10.,
+                    batch_number,
+                );
+            }
+
             return;
         }
 
@@ -78,6 +85,17 @@ fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
     }));
 
     request_animation_frame_custom(g.borrow().as_ref().unwrap());
+}
+fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
+    let ((from_x, from_y), (to_x, to_y)) = arrow.get_from_to();
+
+    draw_simple_line(
+        (from_x, from_y),
+        (to_x, to_y),
+        arrow.directional.clone(),
+        progress,
+        Some(batch_number),
+    );
 }
 
 pub(crate) fn canvas_context() -> CanvasRenderingContext2d {
@@ -134,4 +152,11 @@ pub fn draw_grid_lines(grid_count: u32, is_landscape: bool) {
         context.line_to(i as f64 * width / 16., height);
         context.stroke();
     }
+}
+
+pub(super) fn get_window_x_y() -> (f64, f64) {
+    (
+        window().inner_width().unwrap().as_f64().unwrap(),
+        window().inner_height().unwrap().as_f64().unwrap(),
+    )
 }

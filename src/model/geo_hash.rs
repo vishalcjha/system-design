@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub(crate) struct GeoHash(String);
+#[derive(Debug, Clone, PartialEq, PartialOrd)]
+pub(crate) struct GeoHash(String, pub Option<Vec<((f64, f64), (f64, f64))>>);
 
 impl std::ops::Deref for GeoHash {
     type Target = String;
@@ -61,6 +61,7 @@ impl GeoHash {
             GeoHash::LAT_MAX as f64,
             GeoHash::LAT_MIN as f64,
         );
+        let mut lines = Vec::new();
         for _ in 0..precision {
             // 5 bit for base 32.
             let mut idx: usize = 0;
@@ -87,15 +88,17 @@ impl GeoHash {
                         }
                     }
                 }
+                lines.push(((lon_min, lon_mx), (lat_min, lat_mx)));
 
                 even_bit = !even_bit;
             }
             geo_hash.push(GeoHash::DICT.chars().nth(idx).unwrap());
         }
 
-        GeoHash(geo_hash)
+        GeoHash(geo_hash, Some(lines))
     }
 
+    #[allow(dead_code)]
     fn adjecent_in_direction(&self, direction: Direction) -> GeoHash {
         use Direction::*;
         let border = HashMap::from([
@@ -142,7 +145,9 @@ impl GeoHash {
 
         let border_value = border.get(&direction).unwrap()[pos];
         if border_value.contains(&last_char.as_str()) && !parent.is_empty() {
-            parent = GeoHash(parent).adjecent_in_direction(direction.clone()).0;
+            parent = GeoHash(parent, None)
+                .adjecent_in_direction(direction.clone())
+                .0;
         }
 
         parent.push_str(
@@ -158,8 +163,10 @@ impl GeoHash {
                 .to_string(),
         );
 
-        GeoHash(parent)
+        GeoHash(parent, None)
     }
+
+    #[allow(dead_code)]
     pub fn adjacent_in_all_direction(&self) -> HashMap<Direction, GeoHash> {
         use Direction::*;
         HashMap::from([
@@ -209,16 +216,16 @@ mod test {
     #[test]
     fn test_all_neighbors() {
         use Direction::*;
-        let geo_hash = GeoHash(String::from("gbsuv"));
+        let geo_hash = GeoHash(String::from("gbsuv"), None);
         let expected = HashMap::from([
-            (North, GeoHash(String::from("gbsvj"))),
-            (South, GeoHash(String::from("gbsut"))),
-            (East, GeoHash(String::from("gbsuy"))),
-            (West, GeoHash(String::from("gbsuu"))),
-            (NorthEast, GeoHash(String::from("gbsvn"))),
-            (NorthWest, GeoHash(String::from("gbsvh"))),
-            (SouthEast, GeoHash(String::from("gbsuw"))),
-            (SouthWest, GeoHash(String::from("gbsus"))),
+            (North, GeoHash(String::from("gbsvj"), None)),
+            (South, GeoHash(String::from("gbsut"), None)),
+            (East, GeoHash(String::from("gbsuy"), None)),
+            (West, GeoHash(String::from("gbsuu"), None)),
+            (NorthEast, GeoHash(String::from("gbsvn"), None)),
+            (NorthWest, GeoHash(String::from("gbsvh"), None)),
+            (SouthEast, GeoHash(String::from("gbsuw"), None)),
+            (SouthWest, GeoHash(String::from("gbsus"), None)),
         ]);
         let actual = geo_hash.adjacent_in_all_direction();
         assert_eq!(expected, actual);
@@ -230,7 +237,7 @@ mod test {
 
     #[test]
     fn test_in_north() {
-        let geo_hash = GeoHash(String::from("gbsuv"));
+        let geo_hash = GeoHash(String::from("gbsuv"), None);
         assert_eq!("gbsvj", *geo_hash.adjecent_in_direction(Direction::North));
     }
 }

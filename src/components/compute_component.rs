@@ -5,7 +5,7 @@ use crate::model::compute::{Compute, ComputeType, Status};
 #[component]
 pub fn ComputeComponent(compute: Compute, id: String) -> impl IntoView {
     let Compute {
-        pos,
+        pos: _,
         status,
         compute_type,
     } = compute;

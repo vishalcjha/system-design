@@ -31,12 +31,18 @@ impl CountedDirection {
         }
     }
 
-    fn offset(&self) -> (f64, f64) {
-        match self {
+    fn offset(&self, is_landscape: bool) -> (f64, f64) {
+        let res = match self {
             CountedDirection::Up(_) => (0., -1.),
             CountedDirection::Down(_) => (0., 1.),
             CountedDirection::Right(_) => (1., 0.),
             CountedDirection::Left(_) => (-1., 0.),
+        };
+
+        if is_landscape {
+            res
+        } else {
+            (res.0 / 2., res.1 / 2.)
         }
     }
 
@@ -150,6 +156,7 @@ pub(super) fn GridComponent() -> impl IntoView {
             let window = window();
             let is_landscape =
                 window.inner_width().unwrap().as_f64() > window.inner_height().unwrap().as_f64();
+            let dir_change_count = if is_landscape { 60 } else { 120 };
             draw_grid_lines(16, is_landscape);
             for (index, person) in grid.persons.iter().enumerate() {
                 draw_wrapped_number(
@@ -165,14 +172,14 @@ pub(super) fn GridComponent() -> impl IntoView {
                 let (x, y) = car.position.get();
                 draw_wrapped_number(&context, x, y, 15., format!("C{}", index + 1));
                 let direction = car.direction.get();
-                let (off_x, off_y) = direction.offset();
+                let (off_x, off_y) = direction.offset(is_landscape);
                 car.position.set((x + off_x, y + off_y));
                 if match direction {
                     CountedDirection::Up(x) => x,
                     CountedDirection::Down(x) => x,
                     CountedDirection::Right(x) => x,
                     CountedDirection::Left(x) => x,
-                } > 60
+                } > dir_change_count
                 {
                     car.direction.set(CountedDirection::new());
                 } else {
