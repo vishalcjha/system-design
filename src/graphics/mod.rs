@@ -37,9 +37,13 @@ pub(self) fn draw_simple_line(
     directional: Directional,
     progress: f64,
     batch_number: Option<u32>,
+    color: Option<String>,
 ) {
     let context = canvas_context();
-    context.set_stroke_style(&JsValue::from_str("#3498db")); // Line color
+    let default_color = String::from("#3498db");
+    context.set_stroke_style(&JsValue::from_str(
+        (color.unwrap_or(default_color)).as_ref(),
+    )); // Line color
     context.set_line_width(1.5);
 
     let f = Rc::new(RefCell::new(None));
@@ -95,6 +99,7 @@ fn draw_line_progressively(arrow: Arrow, progress: f64, batch_number: u32) {
         arrow.directional.clone(),
         progress,
         Some(batch_number),
+        None,
     );
 }
 

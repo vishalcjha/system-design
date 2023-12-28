@@ -5,7 +5,7 @@ use crate::model::{
 
 use super::{clear_canvas, draw_simple_line, get_window_x_y};
 
-pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
+pub fn draw_geo_hash((pos_x, pos_y): (f64, f64), precision: Precision) -> (f64, f64, GeoHash) {
     let (width, height) = get_window_x_y();
     let is_landscape = width > height;
     let (width, height) = if is_landscape {
@@ -17,7 +17,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
     let lon = (pos_x - (width / 2.)) * 360. / width;
     let lat = ((height / 2.) - pos_y) * 180. / height;
 
-    let geo_hash = GeoHash::new(lat, lon, Precision::FOUR);
+    let geo_hash = GeoHash::new(lat, lon, precision);
     clear_canvas();
 
     let Some(ref lines) = geo_hash.1 else {
@@ -25,7 +25,17 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
     };
 
     let progress = if is_landscape { 0.03 } else { 0.01 };
-    for (lon, lat) in lines.iter() {
+    let colors = vec![
+        String::from("#3498db"),
+        String::from("#34db6c"),
+        String::from("#34db6c"),
+        String::from("#34c8db"),
+        String::from("#a3db34"),
+        String::from("#c3c9b7"),
+        String::from("#16c3de"),
+    ];
+    for (index, (lon, lat)) in lines.iter().enumerate() {
+        let color = (colors[index / 5]).clone();
         let x_range = get_x_range(lon, width);
         let y_range = get_y_range(lat, height);
 
@@ -35,6 +45,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
             Directional::UnDirectional,
             progress,
             None,
+            Some(color.clone()),
         );
 
         draw_simple_line(
@@ -43,6 +54,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
             Directional::UnDirectional,
             progress,
             None,
+            Some(color.clone()),
         );
         draw_simple_line(
             (x_range.1, y_range.1),
@@ -50,6 +62,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
             Directional::UnDirectional,
             progress,
             None,
+            Some(color.clone()),
         );
         draw_simple_line(
             (x_range.1, y_range.1),
@@ -57,6 +70,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64)) -> (f64, f64, GeoHash) {
             Directional::UnDirectional,
             progress,
             None,
+            Some(color),
         );
     }
 

@@ -18,6 +18,7 @@ pub fn App() -> impl IntoView {
 
         // sets the document title
         <Title text="System Design with Fun"/>
+        <Link rel="icon" href="/public/favicon.ico"/>
         // content for this welcome page
         <Router fallback=|| {
             let mut outside_errors = Errors::default();
