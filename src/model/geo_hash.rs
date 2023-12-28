@@ -44,9 +44,27 @@ pub enum Direction {
     NorthWest,
 }
 
-impl Into<usize> for Precision {
-    fn into(self) -> usize {
-        self as usize
+impl From<usize> for Precision {
+    fn from(value: usize) -> Self {
+        use Precision::*;
+
+        match value {
+            1 => ONE,
+            2 => TWO,
+            3 => THREE,
+            4 => FOUR,
+            5 => FIVE,
+            6 => SIX,
+            7 => SEVEN,
+            8 => EIGTH,
+            _ => panic!("New value encountered"),
+        }
+    }
+}
+
+impl From<Precision> for usize {
+    fn from(value: Precision) -> Self {
+        value as usize
     }
 }
 

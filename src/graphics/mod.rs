@@ -165,3 +165,8 @@ pub(super) fn get_window_x_y() -> (f64, f64) {
         window().inner_height().unwrap().as_f64().unwrap(),
     )
 }
+
+pub(super) fn is_landscape() -> bool {
+    let (width, height) = get_window_x_y();
+    width > height
+}

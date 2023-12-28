@@ -3,7 +3,9 @@ use crate::model::{
     geo_hash::{GeoHash, Precision},
 };
 
-use super::{clear_canvas, draw_simple_line, get_window_x_y};
+use super::{
+    canvas_context, circle_tag::draw_circle, clear_canvas, draw_simple_line, get_window_x_y,
+};
 
 pub fn draw_geo_hash((pos_x, pos_y): (f64, f64), precision: Precision) -> (f64, f64, GeoHash) {
     let (width, height) = get_window_x_y();
@@ -20,6 +22,8 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64), precision: Precision) -> (f64, 
     let geo_hash = GeoHash::new(lat, lon, precision);
     clear_canvas();
 
+    let context = canvas_context();
+    draw_circle(&context, pos_x, pos_y, 2.);
     let Some(ref lines) = geo_hash.1 else {
         panic!("this is not to happen");
     };
@@ -34,6 +38,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64), precision: Precision) -> (f64, 
         String::from("#c3c9b7"),
         String::from("#16c3de"),
     ];
+
     for (index, (lon, lat)) in lines.iter().enumerate() {
         let color = (colors[index / 5]).clone();
         let x_range = get_x_range(lon, width);
