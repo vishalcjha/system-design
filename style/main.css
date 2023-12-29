@@ -267,25 +267,11 @@ select {
 	transition: box-shadow 0.3s;
 }
 
-/* Container for the Grid */
-.grid-container {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 8), 1fr));
-	gap: 10px;
-	top: 0;
-	left: 0;
-	width: max-content;
-
-	/* Adjust the gap between cards */
+.topic .div:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	transition: box-shadow 0.3s;
 }
 
-/* Container for the Grid */
-.grid-container-16 {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(calc(50% / 16), 1fr));
-	gap: 5px;
-	top: 0;
-	left: 0;
-	width: max-content;
-	/* Adjust the gap between cards */
+.topic .div {
+	background-color: green;
 }

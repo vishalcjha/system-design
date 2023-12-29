@@ -92,19 +92,19 @@ pub fn TwoPhaseCommit() -> impl IntoView {
     view! {
         <div id="page-container">
         <div id="first" style="display:flex;flex-direction:column;
-            flex:1;align-self:stretch;align-items:stretch;justify-content:stretch;justify-self:stretch;
+            flex:1;align-self:stretch;justify-self:stretch;
             padding:5px;border-style:solid;border-color:green;">
-            <div style="display:flex;flex-direction:row;flex:1;justify-content:stretch;">
+            <div style="display:flex;flex-direction:row;flex:1;justify-content:space-between;align-items:center;">
             {move || computes().into_iter().map(|compute|
                 view! {
-                    <div style="display:flex;flex:1">
+                    <div>
                     <ComputeComponent compute={compute.1} id={compute.0} />
                     </div>
                 }
             ).collect_view()}
             </div>
 
-            <div style="display:flex;flex:1;justify-content:center;align-items:center;align-self:center;justify-self:center;">
+            <div style="display:flex;flex:1;justify-content:center;align-items:start;">
                 <Show
                     when= move || has_scenario()
                     fallback=move || view! {

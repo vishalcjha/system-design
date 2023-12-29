@@ -1,6 +1,6 @@
 use crate::{
     error_template::{AppError, ErrorTemplate},
-    graphics::clear_canvas,
+    graphics::{clear_canvas, is_landscape},
     topic::{
         consistent_hashing::ConsistentHashingComponent, geo_hash::GeoHashComponent,
         two_phase::two_phase_commit::TwoPhaseCommit, uber::uber_component::UberComponent,
@@ -28,7 +28,7 @@ pub fn App() -> impl IntoView {
             }
             .into_view()
         }>
-        <canvas id="canvas"/>
+        <canvas id="canvas" style="z-index:-10"/>
 
         <Routes>
             <Route path="" view=HomePage/>
@@ -46,27 +46,37 @@ pub fn App() -> impl IntoView {
 #[component]
 fn HomePage() -> impl IntoView {
     create_effect(|_| clear_canvas());
+    let ref_button_map = vec![
+        ("/geo-hash", "Geo Hash"),
+        ("/2pc", "2 Phase Commit"),
+        ("/consistent-hashing", "Consistene Hashing"),
+        ("/caching", "Caching"),
+        ("/uber", "Uber"),
+    ];
     view! {
-        <div style="display: flex; flex: 1; flex-direction: column; justify-content: center; align-self:stretch; align-items: center;">
-        <div class="card">
-            <nav> <a href="/geo-hash"><button class="button" type="button"> Geo Hash </button> </a></nav>
-        </div>
-        <div class="card">
-            <nav> <a href="/2pc"><button class="button" type="button"> 2 Phase Commit </button> </a></nav>
+        <div style="display:flex;flex:1;flex-direction:row;justify-self:stretch;align-self:stretch;">
+        <div id="first" style="display:flex;flex:1;flex-direction:column;
+            align-self:stretch;
+            justify-content:center;align-items:center;
+            border-style:solid;border-color:green;">
+
+        <div class="topic">
+        {move || ref_button_map.iter().map(|page_title| view! {
+            <div style="display:flex;margin:10px">
+            <a href={page_title.0}>{page_title.1}</a>
+            </div>
+        }).collect_view()}
         </div>
 
-        <div class="card">
-            <nav> <a href="/consistent-hashing"><button class="button" type="button"> Consistene Hashing </button> </a></nav>
         </div>
 
-        <div class="card">
-            <nav> <a href="/caching"><button class="button" type="button"> Caching </button> </a></nav>
-        </div>
-
-        <div class="card">
-            <nav> <a href="/uber"><button class="button" type="button"> Uber </button> </a></nav>
-        </div>
-
+        {
+            is_landscape().then(move || view! {
+                <div id="second" style="display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;">
+                    <p> System Design </p>
+                </div>
+            })
+        }
 
         </div>
     }
