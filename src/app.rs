@@ -2,8 +2,8 @@ use crate::{
     error_template::{AppError, ErrorTemplate},
     graphics::clear_canvas,
     topic::{
-        geo_hash::GeoHashComponent, two_phase::two_phase_commit::TwoPhaseCommit,
-        uber::uber_component::UberComponent,
+        consistent_hashing::ConsistentHashingComponent, geo_hash::GeoHashComponent,
+        two_phase::two_phase_commit::TwoPhaseCommit, uber::uber_component::UberComponent,
     },
 };
 use leptos::*;
@@ -35,6 +35,7 @@ pub fn App() -> impl IntoView {
             <Route path="/2pc" view=TwoPhaseCommit/>
             <Route path="/geo-hash" view=GeoHashComponent/>
             <Route path="/uber" view=UberComponent/>
+            <Route path="/consistent-hashing" view=ConsistentHashingComponent/>
         </Routes>
         </Router>
 
@@ -55,12 +56,18 @@ fn HomePage() -> impl IntoView {
         </div>
 
         <div class="card">
-            <nav> <a href="/uber"><button class="button" type="button"> Uber </button> </a></nav>
+            <nav> <a href="/consistent-hashing"><button class="button" type="button"> Consistene Hashing </button> </a></nav>
         </div>
 
         <div class="card">
             <nav> <a href="/caching"><button class="button" type="button"> Caching </button> </a></nav>
         </div>
+
+        <div class="card">
+            <nav> <a href="/uber"><button class="button" type="button"> Uber </button> </a></nav>
+        </div>
+
+
         </div>
     }
 }
