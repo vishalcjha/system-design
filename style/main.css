@@ -113,7 +113,7 @@ body {
 	border: none;
 	border-radius: 4px;
 	padding: 0 0px;
-	min-width: 100px;
+	min-width: 75px;
 	height: 36px;
 	vertical-align: middle;
 	text-align: center;
@@ -274,4 +274,11 @@ select {
 
 .topic .div {
 	background-color: green;
+}
+
+table,
+th,
+td {
+	border: 1px solid black;
+	border-collapse: collapse;
 }

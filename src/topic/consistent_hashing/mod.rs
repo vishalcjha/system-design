@@ -1,8 +1,8 @@
 use leptos::*;
 
 use crate::topic::consistent_hashing::{
-    perfec_scenario::PerfectScenario, problem_scenario::ProblemScenario,
-    uneven_scenario::UnevenScenario,
+    initial_setup::InitialSetupComponent, perfec_scenario::PerfectScenario,
+    problem_scenario::ProblemScenario, uneven_scenario::UnevenScenario,
 };
 mod initial_setup;
 mod perfec_scenario;
@@ -11,65 +11,60 @@ mod uneven_scenario;
 
 #[component]
 pub(crate) fn ConsistentHashingComponent() -> impl IntoView {
-    let (scenario, set_scenario) = create_signal("problem");
+    let (scenario, set_scenario) = create_signal(String::from("problem"));
     let (server_count, set_server_count) = create_signal(3);
-    let server_count_inc = move |_| {
-        set_server_count.update(|count| {
-            if *count <= 5 {
-                *count = *count + 1
-            }
-        });
-    };
-    let server_count_dec = move |_| {
-        set_server_count.update(|count| {
-            if *count >= 2 {
-                *count = *count - 1
-            }
-        });
-    };
-    let button_handler = |id: &'static str| {
-        move |_| {
-            set_scenario(id);
-        }
-    };
+
     view! {
         <div id="page-container">
 
         <div id="first" style="dispaly:flex;flex:1;justify-self:stretch;align-self:stretch;
-            padding:5px;border-style:solid;border-color:green;flex-direction:column;justify-items:center;align-content:center">
-            <div id="scenario" style="flex:1;dispaly:flex;flex-direction:column;">
-
+            padding:5px;border:solid green;flex-direction:column;justify-items:center;align-content:center;">
+            <div id="scenario" style="flex:1;dispaly:flex;flex-direction:column;align-items:center;">
+                <div style="flex:1;margin-bottom:3px;"><InitialSetupComponent server_count=server_count/></div>
                 <div>
-                <Show when=move || scenario() == "problem"
-                fallback=move|| view!{
-                    <Show
-                    when= move || scenario() == "perfect"
-                    fallback=move || view! {<UnevenScenario server_count=server_count/>}>
-                        <PerfectScenario server_count=server_count/>
-                    </Show>
+                {
+                    move || {
+                        if scenario() == "perfect" {
+                            view! {<PerfectScenario server_count=server_count/>}
+                        } else if scenario() == "uneven" {
+                            view! {<UnevenScenario server_count=server_count/>}
+                        } else {
+                            view! {<ProblemScenario/>}
+                        }
+                    }
                 }
-                >
-                    <ProblemScenario server_count=server_count/>
-                </Show>
                 </div>
 
-                <div style="display:flex;flex-direction:row;justify-content:center;align-items:center;">
-                <button on:click=server_count_dec class="button" style="color:green;">"-"</button>
-                <p>    Server   </p>
-                <button on:click=server_count_inc class="button" style="color:green;">"+"</button>
+                <div style="display:flex;flex-direction:row;justify-content:space-evenly;align-items:center;">
+                {move || {
+                    let mut views = vec![
+                        view! {<div><button on:click=move |_| set_server_count(2) class="button">"2 Nodes"</button></div>},
+                        view! {<div><button on:click=move |_| set_server_count(3) class="button">"3 Nodes"</button></div>},
+                        view! {<div><button on:click=move |_| set_server_count(4) class="button">"4 Nodes"</button></div>}
+                    ];
+                    let removed_index = if server_count() == 2 { 0 } else if server_count() == 3 { 1 } else { 2 };
+                    let _ = views.remove(removed_index);
+                    let scenario_view = view! {
+                        <div id="scenario-selector;">
+                            <select on:change=move |cv| set_scenario(event_target_value(&cv))>
+                                <option value="">Select Scenario</option>
+                                <option value="problem">Mod Based</option>
+                                <option value="uneven">Unbalanced Load</option>
+                                <option value="perfect">Consitent Hashing</option>
+                            </select>
+                        </div>
+                    };
+                    views.insert(1, scenario_view);
+                    views.collect_view()
+                }}
                 </div>
 
             </div>
-            <div id="scenario-selector" style="flex:1;dispaly:flex;
-                flex-direction:row;justify-content: space-between;">
-                <button class="button" id="problem" style="flex:1" on:click=button_handler("problem")>Problem</button>
-                <button class="button" id="uneven" style="flex:1" on:click=button_handler("uneven")>Uneven</button>
-                <button class="button"  id="perfect" style="flex:1" on:click=button_handler("perfect")>Perfect</button>
-            </div>
+
         </div>
 
         <div id="second" style="dispaly:flex;flex:1;justify-self:stretch;align-self:stretch;">
-
+                <p> Describe Things </p>
         </div>
         </div>
     }

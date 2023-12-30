@@ -17,7 +17,7 @@ pub fn App() -> impl IntoView {
     view! {
 
         // sets the document title
-        <Title text="System Design with Fun"/>
+        <Title text="System Design"/>
         <Link rel="icon" href="/public/favicon.ico"/>
         // content for this welcome page
         <Router fallback=|| {
@@ -36,6 +36,7 @@ pub fn App() -> impl IntoView {
             <Route path="/geo-hash" view=GeoHashComponent/>
             <Route path="/uber" view=UberComponent/>
             <Route path="/consistent-hashing" view=ConsistentHashingComponent/>
+            // <Route path="/server-client" view=/>
         </Routes>
         </Router>
 
@@ -49,17 +50,29 @@ fn HomePage() -> impl IntoView {
     let ref_button_map = vec![
         ("/geo-hash", "Geo Hash"),
         ("/2pc", "2 Phase Commit"),
-        ("/consistent-hashing", "Consistene Hashing"),
-        ("/caching", "Caching"),
+        ("/consistent-hashing", "Consistenet Hashing"),
+        // ("/caching", "Caching"),
         ("/uber", "Uber"),
     ];
     view! {
         <div style="display:flex;flex:1;flex-direction:row;justify-self:stretch;align-self:stretch;">
         <div id="first" style="display:flex;flex:1;flex-direction:column;
             align-self:stretch;
-            justify-content:center;align-items:center;
-            border-style:solid;border-color:green;">
+            border-color:green;
+            justify-content:center;align-items:center;"
+            style:border-style = move || if is_landscape() {"solid"} else {"none"}
+        >
 
+            {
+                (!is_landscape()).then(move || view! {
+                    <div id="second" style="align-self:center;order:20;position:fixed;bottom:0;margin-bottom: 5px;">
+                        <h1> System Design </h1>
+                        <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI  </a>
+                        <br/>
+                        System Desing on high level with interactive UI. I hope to make learning experience easy and enjoyable.
+                    </div>
+                })
+            }
         <div class="topic">
         {move || ref_button_map.iter().map(|page_title| view! {
             <div style="display:flex;margin:10px">
@@ -73,7 +86,10 @@ fn HomePage() -> impl IntoView {
         {
             is_landscape().then(move || view! {
                 <div id="second" style="display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;">
-                    <p> System Design </p>
+                    <h1> System Design </h1>
+                    System Desing on high level with interactive UI. I hope to make learning experience easy and enjoyable.
+                    <br/>
+                    <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI </a>
                 </div>
             })
         }

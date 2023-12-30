@@ -9,7 +9,7 @@ pub fn UberComponent() -> impl IntoView {
         <div id="first" style="display:flex;flex-direction:column;
         flex:1;align-self:stretch;justify-self:stretch;
         justify-content:center;align-items:center;
-        padding:5px;border-style:solid;border-color:green;">
+        border:solid green;">
             <img src="/public/uber_stream.png" alt="Compute Image"/>
             <div>
                 <GridComponent/>

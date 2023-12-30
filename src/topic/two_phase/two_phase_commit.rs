@@ -93,7 +93,7 @@ pub fn TwoPhaseCommit() -> impl IntoView {
         <div id="page-container">
         <div id="first" style="display:flex;flex-direction:column;
             flex:1;align-self:stretch;justify-self:stretch;
-            padding:5px;border-style:solid;border-color:green;">
+            padding:1px;border:solid green;">
             <div style="display:flex;flex-direction:row;flex:1;justify-content:space-between;align-items:center;">
             {move || computes().into_iter().map(|compute|
                 view! {
