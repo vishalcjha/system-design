@@ -8,8 +8,7 @@ use crate::model::{
 };
 
 use super::{
-    canvas_context, circle_tag::draw_circle, clear_canvas, draw_simple_line, get_window_x_y,
-    is_landscape,
+    circle_tag::draw_circle, clear_canvas, draw_simple_line, get_window_x_y, is_landscape,
 };
 
 fn draw_geo_hash_impl(lines: Vec<((f64, f64), (f64, f64))>, loop_count: usize) {
@@ -96,8 +95,7 @@ pub fn draw_geo_hash((pos_x, pos_y): (f64, f64), precision: Precision) -> (f64, 
     let geo_hash = GeoHash::new(lat, lon, precision);
     clear_canvas();
 
-    let context = canvas_context();
-    draw_circle(&context, pos_x, pos_y, 2.);
+    draw_circle(pos_x, pos_y, 2.);
     let Some(ref lines) = geo_hash.1 else {
         panic!("this is not to happen");
     };

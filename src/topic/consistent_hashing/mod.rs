@@ -1,11 +1,12 @@
 use leptos::*;
 
 use crate::topic::consistent_hashing::{
-    initial_setup::InitialSetupComponent, perfec_scenario::PerfectScenario,
+    circle_distribution::CircleDistibutionComponent, perfect_scenario::PerfectScenario,
     problem_scenario::ProblemScenario, uneven_scenario::UnevenScenario,
 };
+mod circle_distribution;
 mod initial_setup;
-mod perfec_scenario;
+mod perfect_scenario;
 mod problem_scenario;
 mod uneven_scenario;
 
@@ -20,22 +21,44 @@ pub(crate) fn ConsistentHashingComponent() -> impl IntoView {
         <div id="first" style="dispaly:flex;flex:1;justify-self:stretch;align-self:stretch;
             padding:5px;border:solid green;flex-direction:column;justify-items:center;align-content:center;">
             <div id="scenario" style="flex:1;dispaly:flex;flex-direction:column;align-items:center;">
-                <div style="flex:1;margin-bottom:3px;"><InitialSetupComponent server_count=server_count/></div>
-                <div>
+                // <div style="flex:1;margin-bottom:3px;"><InitialSetupComponent server_count=server_count/></div>
+                <div style="flex:1">
                 {
                     move || {
                         if scenario() == "perfect" {
-                            view! {<PerfectScenario server_count=server_count/>}
+                            view! {
+                                <div>
+                                <PerfectScenario server_count=server_count/>
+                                </div>
+                            }
                         } else if scenario() == "uneven" {
-                            view! {<UnevenScenario server_count=server_count/>}
+                            view! {<div><UnevenScenario server_count=server_count/></div>}
                         } else {
-                            view! {<ProblemScenario/>}
+                            view! {<div><ProblemScenario server_count=server_count/></div>}
                         }
                     }
                 }
                 </div>
 
-                <div style="display:flex;flex-direction:row;justify-content:space-evenly;align-items:center;">
+                <div id="circle-distribution-component" style="flex:1">
+                {
+                    move || {
+                        if scenario() == "perfect" {
+                            Some(view! {
+                                <div>
+                                <CircleDistibutionComponent element_id="circle-distribution-component" server_count=server_count/>
+                                </div>
+                            })
+                        } else if scenario() == "uneven" {
+                            Some(view! {<div><CircleDistibutionComponent element_id="circle-distribution-component" server_count=server_count/></div>})
+                        } else {
+                            None
+                        }
+                    }
+                }
+                </div>
+
+                <div style="display:flex;flex-direction:row;justify-content:space-evenly;align-items:end;">
                 {move || {
                     let mut views = vec![
                         view! {<div><button on:click=move |_| set_server_count(2) class="button">"2 Nodes"</button></div>},

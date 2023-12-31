@@ -52,6 +52,8 @@ fn HomePage() -> impl IntoView {
         ("/2pc", "2 Phase Commit"),
         ("/consistent-hashing", "Consistenet Hashing"),
         // ("/caching", "Caching"),
+        // ("/gossip", "Gossip"),
+        // ("/client-server", "ClientServer") // polling, long polling, server side events, web-socet
         ("/uber", "Uber"),
     ];
     view! {

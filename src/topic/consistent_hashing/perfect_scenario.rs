@@ -17,7 +17,7 @@ fn get_initail(server_count: u32) -> BTreeMap<u32, (Vec<u32>, Vec<u32>)> {
 }
 
 #[component]
-pub(super) fn UnevenScenario(server_count: ReadSignal<u32>) -> impl IntoView {
+pub(super) fn PerfectScenario(server_count: ReadSignal<u32>) -> impl IntoView {
     let setup = move || get_initail(server_count());
     view! {
        <InitialSetupComponent server_count=server_count setup=Signal::derive(setup)/>

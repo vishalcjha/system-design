@@ -72,7 +72,6 @@ pub(self) fn draw_simple_line(
 
             if let Some(batch_number) = batch_number {
                 draw_wrapped_number(
-                    &context,
                     from_x + (to_x - from_x) / 2.,
                     from_y + (to_y - from_y) / 2.,
                     10.,
@@ -164,6 +163,15 @@ pub(super) fn get_window_x_y() -> (f64, f64) {
         window().inner_width().unwrap().as_f64().unwrap(),
         window().inner_height().unwrap().as_f64().unwrap(),
     )
+}
+
+pub(super) fn get_drawable_canvas_x_y() -> (f64, f64) {
+    let (width, height) = get_window_x_y();
+    if is_landscape() {
+        (width / 2., height)
+    } else {
+        (width, height / 2.)
+    }
 }
 
 pub(super) fn is_landscape() -> bool {

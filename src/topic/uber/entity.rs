@@ -8,7 +8,7 @@ use wasm_bindgen::closure::Closure;
 use web_sys::js_sys::Math::random;
 
 use crate::graphics::{
-    canvas, canvas_context, circle_tag::draw_wrapped_number, clear_canvas, draw_grid_lines,
+    canvas, circle_tag::draw_wrapped_number, clear_canvas, draw_grid_lines,
     request_animation_frame_custom,
 };
 
@@ -151,7 +151,6 @@ pub(super) fn GridComponent() -> impl IntoView {
         let g = f.clone();
 
         *g.borrow_mut() = Some(Closure::new(move || {
-            let context = canvas_context();
             clear_canvas();
             let window = window();
             let is_landscape =
@@ -160,7 +159,6 @@ pub(super) fn GridComponent() -> impl IntoView {
             draw_grid_lines(16, is_landscape);
             for (index, person) in grid.persons.iter().enumerate() {
                 draw_wrapped_number(
-                    &context,
                     person.position.0,
                     person.position.1,
                     15.,
@@ -170,7 +168,7 @@ pub(super) fn GridComponent() -> impl IntoView {
 
             for (index, car) in grid.cars.iter().enumerate() {
                 let (x, y) = car.position.get();
-                draw_wrapped_number(&context, x, y, 15., format!("C{}", index + 1));
+                draw_wrapped_number(x, y, 15., format!("C{}", index + 1));
                 let direction = car.direction.get();
                 let (off_x, off_y) = direction.offset(is_landscape);
                 car.position.set((x + off_x, y + off_y));
