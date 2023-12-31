@@ -67,43 +67,55 @@ impl NodeHashing {
         NodeHashing::ConsistenHashing(sliced)
     }
 
-    pub fn get_four_server_pos() -> Vec<u32> {
-        vec![10, 15, 2, 6]
+    pub fn get_four_server_pos(is_consitent: bool) -> Vec<Vec<u32>> {
+        if is_consitent {
+            vec![vec![9, 17], vec![15, 4], vec![2, 12], vec![5, 7]]
+        } else {
+            vec![vec![9], vec![15], vec![2], vec![5]]
+        }
     }
 
-    fn get_num_distribution(
+    pub fn get_num_distribution() -> HashMap<u32, u32> {
+        HashMap::<u32, u32>::from([
+            (5, 7),
+            (6, 16),
+            (7, 18),
+            (8, 3),
+            (9, 14),
+            (10, 4),
+            (11, 5),
+            (12, 12),
+            (13, 11),
+            (14, 9),
+            (15, 15),
+            (16, 1),
+        ])
+    }
+
+    fn map_num_to_node(
         server_count: u32,
         from: u32,
         to: u32,
         result: &mut BTreeMap<u32, (Vec<u32>, Vec<u32>)>,
         is_first_round: bool,
+        is_consistent: bool,
     ) {
         //let mut hasher = DefaultHasher::new();
         // server distribution with 0, 1, 2, 3, 4, is not distributed.
         // Fixing value for better distrubution.
-        let server_hash_map = NodeHashing::get_four_server_pos()[0..server_count as usize]
+        let server_hash_map = NodeHashing::get_four_server_pos(is_consistent)
+            [0..server_count as usize]
             .into_iter()
-            .map(|num| *num)
-            .collect::<Vec<u32>>();
+            .map(|num| num.clone())
+            .collect::<Vec<Vec<u32>>>();
         let mut server_ring = vec![0; 19];
         for server_num in 0..server_count {
-            server_ring[server_hash_map[server_num as usize] as usize] = server_num + 1;
+            for pos in &server_hash_map[server_num as usize] {
+                server_ring[*pos as usize] = server_num + 1;
+            }
         }
 
-        let forced_distribution = HashMap::<u32, u32>::from([
-            (5, 11),
-            (6, 3),
-            (7, 15),
-            (8, 13),
-            (9, 4),
-            (10, 8),
-            (11, 16),
-            (12, 17),
-            (13, 10),
-            (14, 18),
-            (15, 12),
-            (16, 5),
-        ]);
+        let forced_distribution = NodeHashing::get_num_distribution();
         for i in from..=to {
             // (i * 89).hash(&mut hasher);
             let num_hash = *forced_distribution.get(&i).unwrap();
@@ -121,6 +133,7 @@ impl NodeHashing {
                 for j in (num_hash..19).rev() {
                     if server_ring[j as usize] != 0 {
                         owner = Some(server_ring[j as usize]);
+                        break;
                     }
                 }
             }
@@ -144,13 +157,20 @@ impl NodeHashing {
         }
     }
 
-    pub fn data_mapping(&self, from: u32, to: u32) -> BTreeMap<u32, (Vec<u32>, Vec<u32>)> {
+    pub fn data_mapping(
+        &self,
+        from: u32,
+        to: u32,
+    ) -> (
+        BTreeMap<u32, (Vec<u32>, Vec<u32>)>,
+        Option<(HashMap<u32, u32>, HashMap<u32, Vec<u32>>)>,
+    ) {
         match self {
             NodeHashing::ModBased(NonSliced {
                 original_server_count,
                 server_count,
             }) => {
-                let node_distribution =
+                let mut node_distribution =
                     (from..=to)
                         .into_iter()
                         .fold(BTreeMap::new(), |mut map, current| {
@@ -162,63 +182,86 @@ impl NodeHashing {
                             map
                         });
                 if original_server_count != server_count {
-                    return (from..=to)
-                        .into_iter()
-                        .fold(node_distribution, |mut map, current| {
-                            map.entry(current % server_count)
-                                .and_modify(|entry: &mut (Vec<u32>, Vec<u32>)| {
-                                    entry.1.push(current)
-                                })
-                                .or_insert_with(|| (Vec::new(), vec![current]));
-                            map
-                        });
+                    node_distribution =
+                        (from..=to)
+                            .into_iter()
+                            .fold(node_distribution, |mut map, current| {
+                                map.entry(current % server_count)
+                                    .and_modify(|entry: &mut (Vec<u32>, Vec<u32>)| {
+                                        entry.1.push(current)
+                                    })
+                                    .or_insert_with(|| (Vec::new(), vec![current]));
+                                map
+                            });
                 }
 
-                node_distribution
+                (node_distribution, None)
             }
 
             NodeHashing::UnEven(sliced) => {
                 let mut result = BTreeMap::new();
-                NodeHashing::get_num_distribution(
+                NodeHashing::map_num_to_node(
                     sliced.original_server_count,
                     from,
                     to,
                     &mut result,
                     true,
+                    false,
                 );
                 if sliced.server_count != sliced.original_server_count {
-                    NodeHashing::get_num_distribution(
+                    NodeHashing::map_num_to_node(
                         sliced.server_count,
                         from,
                         to,
                         &mut result,
                         false,
+                        false,
                     );
                 }
 
-                result
+                let server_map = NodeHashing::get_four_server_pos(false)
+                    [0..sliced.server_count as usize]
+                    .into_iter()
+                    .enumerate()
+                    .map(|(index, pos)| (index as u32, pos.clone()))
+                    .collect();
+                (
+                    result,
+                    Some((NodeHashing::get_num_distribution(), server_map)),
+                )
             }
 
             NodeHashing::ConsistenHashing(sliced) => {
                 let mut result = BTreeMap::new();
-                NodeHashing::get_num_distribution(
+                NodeHashing::map_num_to_node(
                     sliced.original_server_count,
                     from,
                     to,
                     &mut result,
                     true,
+                    true,
                 );
                 if sliced.server_count != sliced.original_server_count {
-                    NodeHashing::get_num_distribution(
+                    NodeHashing::map_num_to_node(
                         sliced.server_count,
                         from,
                         to,
                         &mut result,
                         false,
+                        true,
                     );
                 }
 
-                result
+                let server_map = NodeHashing::get_four_server_pos(true)
+                    [0..sliced.server_count as usize]
+                    .into_iter()
+                    .enumerate()
+                    .map(|(index, pos)| (index as u32, pos.clone()))
+                    .collect();
+                (
+                    result,
+                    Some((NodeHashing::get_num_distribution(), server_map)),
+                )
             }
         }
     }

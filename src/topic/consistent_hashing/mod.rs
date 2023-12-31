@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use leptos::*;
 
 use crate::topic::consistent_hashing::{
@@ -10,10 +12,13 @@ mod perfect_scenario;
 mod problem_scenario;
 mod uneven_scenario;
 
+pub(self) type Distribution = (HashMap<u32, u32>, HashMap<u32, Vec<u32>>);
+
 #[component]
 pub(crate) fn ConsistentHashingComponent() -> impl IntoView {
     let (scenario, set_scenario) = create_signal(String::from("problem"));
     let (server_count, set_server_count) = create_signal(3);
+    let (distribution, set_distribution) = create_signal::<Option<Distribution>>(None);
 
     view! {
         <div id="page-container">
@@ -28,11 +33,11 @@ pub(crate) fn ConsistentHashingComponent() -> impl IntoView {
                         if scenario() == "perfect" {
                             view! {
                                 <div>
-                                <PerfectScenario server_count=server_count/>
+                                <PerfectScenario server_count=server_count set_distribution=set_distribution/>
                                 </div>
                             }
                         } else if scenario() == "uneven" {
-                            view! {<div><UnevenScenario server_count=server_count/></div>}
+                            view! {<div><UnevenScenario server_count=server_count set_distribution=set_distribution/></div>}
                         } else {
                             view! {<div><ProblemScenario server_count=server_count/></div>}
                         }
@@ -46,11 +51,11 @@ pub(crate) fn ConsistentHashingComponent() -> impl IntoView {
                         if scenario() == "perfect" {
                             Some(view! {
                                 <div>
-                                <CircleDistibutionComponent element_id="circle-distribution-component" server_count=server_count/>
+                                <CircleDistibutionComponent element_id="circle-distribution-component"  distribution=distribution/>
                                 </div>
                             })
                         } else if scenario() == "uneven" {
-                            Some(view! {<div><CircleDistibutionComponent element_id="circle-distribution-component" server_count=server_count/></div>})
+                            Some(view! {<div><CircleDistibutionComponent element_id="circle-distribution-component"  distribution=distribution/></div>})
                         } else {
                             None
                         }

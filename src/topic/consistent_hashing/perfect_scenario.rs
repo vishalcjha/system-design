@@ -7,7 +7,9 @@ use crate::{
     topic::consistent_hashing::initial_setup::InitialSetupComponent,
 };
 
-fn get_initail(server_count: u32) -> BTreeMap<u32, (Vec<u32>, Vec<u32>)> {
+use super::Distribution;
+
+fn get_initail(server_count: u32) -> (BTreeMap<u32, (Vec<u32>, Vec<u32>)>, Option<Distribution>) {
     if server_count == 3 {
         NodeHashing::consistent(Sliced::new(server_count, 19)).data_mapping(5, 16)
     } else {
@@ -17,8 +19,15 @@ fn get_initail(server_count: u32) -> BTreeMap<u32, (Vec<u32>, Vec<u32>)> {
 }
 
 #[component]
-pub(super) fn PerfectScenario(server_count: ReadSignal<u32>) -> impl IntoView {
-    let setup = move || get_initail(server_count());
+pub(super) fn PerfectScenario(
+    server_count: ReadSignal<u32>,
+    set_distribution: WriteSignal<Option<Distribution>>,
+) -> impl IntoView {
+    let setup = move || {
+        let initials = get_initail(server_count());
+        set_distribution.set(initials.1);
+        initials.0
+    };
     view! {
        <InitialSetupComponent server_count=server_count setup=Signal::derive(setup)/>
     }

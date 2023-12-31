@@ -9,10 +9,12 @@ use crate::{
 };
 fn get_initail(server_count: u32) -> BTreeMap<u32, (Vec<u32>, Vec<u32>)> {
     if server_count == 3 {
-        NodeHashing::new_mod_based(NonSliced::new(server_count)).data_mapping(5, 16)
+        NodeHashing::new_mod_based(NonSliced::new(server_count))
+            .data_mapping(5, 16)
+            .0
     } else {
         let non_sliced = NonSliced::new(3).updated(server_count);
-        NodeHashing::new_mod_based(non_sliced).data_mapping(5, 16)
+        NodeHashing::new_mod_based(non_sliced).data_mapping(5, 16).0
     }
 }
 #[component]
