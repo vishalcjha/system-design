@@ -1,6 +1,6 @@
 use std::cell::Cell;
 
-use super::{ComputeStatusChanger, PositionHolder};
+use super::{ComputeStatusChanger, TwoPhasePositions};
 use crate::{
     graphics::draw_lines_concurrently,
     model::arrow::{Arrow, Directional, Edge, Offset},
@@ -14,8 +14,12 @@ pub(super) struct ServerDownScenario {
 }
 
 impl ServerDownScenario {
+    pub const NAME: &'static str = "ServerDown";
+}
+
+impl ServerDownScenario {
     pub(super) fn new() -> ServerDownScenario {
-        let positions = PositionHolder::default();
+        let positions = TwoPhasePositions::default();
 
         let server_pos = positions.server_pos();
         let client_one_pos = positions.client_one_pos();
@@ -72,6 +76,10 @@ impl Scenario for ServerDownScenario {
     fn is_playing(&self) -> bool {
         todo!()
     }
+
+    fn name(&self) -> &'static str {
+        ServerDownScenario::NAME
+    }
 }
 
 impl ComputeStatusChanger for ServerDownScenario {
@@ -84,12 +92,12 @@ impl ComputeStatusChanger for ServerDownScenario {
                 computes
                     .iter()
                     .map(|compute| match compute.1.compute_type {
-                        crate::model::compute::ComputeType::Server => {
+                        crate::model::compute::ComputeType::Server(_) => {
                             let mut down_server = compute.1.clone();
                             down_server.to_down_compute();
                             (compute.0.clone(), down_server)
                         }
-                        crate::model::compute::ComputeType::Client(_) => compute.clone(),
+                        crate::model::compute::ComputeType::Client(_, _) => compute.clone(),
                     })
                     .collect(),
             )

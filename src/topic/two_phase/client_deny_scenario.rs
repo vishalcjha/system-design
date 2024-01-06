@@ -1,6 +1,6 @@
 use std::cell::Cell;
 
-use super::{ComputeStatusChanger, PositionHolder};
+use super::{ComputeStatusChanger, TwoPhasePositions};
 use crate::{
     graphics::draw_lines_concurrently,
     model::arrow::{Arrow, Directional, Edge, Offset},
@@ -14,8 +14,12 @@ pub(super) struct ClientDenyScenario {
 }
 
 impl ClientDenyScenario {
+    pub(super) const NAME: &'static str = "ClientDeny";
+}
+
+impl ClientDenyScenario {
     pub(super) fn new() -> ClientDenyScenario {
-        let positions = PositionHolder::default();
+        let positions = TwoPhasePositions::default();
 
         let server_pos = positions.server_pos();
         let client_one_pos = positions.client_one_pos();
@@ -42,8 +46,13 @@ impl ClientDenyScenario {
             server_to_client_two_arrow.with_offset(Offset(2)),
         ]);
         steps.push(vec![
-            client_one_to_server.with_offset(Offset(6)),
-            client_two_to_server.with_offset(Offset(6)),
+            client_one_to_server.with_offset(Offset(4)),
+            client_two_to_server.with_offset(Offset(4)),
+        ]);
+
+        steps.push(vec![
+            server_to_client_one_arrow.with_offset(Offset(6)),
+            server_to_client_two_arrow.with_offset(Offset(6)),
         ]);
 
         ClientDenyScenario {
@@ -71,6 +80,10 @@ impl Scenario for ClientDenyScenario {
 
     fn is_playing(&self) -> bool {
         todo!()
+    }
+
+    fn name(&self) -> &'static str {
+        ClientDenyScenario::NAME
     }
 }
 

@@ -15,16 +15,20 @@ pub fn ComputeComponent(compute: Compute, id: String) -> impl IntoView {
         // style:grid-row = move || format!("{}", pos.0)
     >
         <img class="img" src="/public/server.png" alt="Compute Image"/>
-        <img class="icon" src={get_status_img(&status)} alt="Compute Statue"/>
-        <label class="label">{get_label(&compute_type)}</label>
+        <img class="icon" src={get_status_img(&status)} alt="Compute Status"/>
+        <label class="label" style="">{get_label(&compute_type)}</label>
      </div>
     }
 }
 
 fn get_label(compute_type: &ComputeType) -> String {
     match compute_type {
-        crate::model::compute::ComputeType::Server => String::from("Server"),
-        crate::model::compute::ComputeType::Client(num) => format!("Client{}", num),
+        crate::model::compute::ComputeType::Server(ref name) => {
+            String::from(name.clone().unwrap_or(String::from("Server")))
+        }
+        crate::model::compute::ComputeType::Client(num, ref name) => {
+            format!("{}{}", name.clone().unwrap_or(String::from("Client")), num)
+        }
     }
 }
 

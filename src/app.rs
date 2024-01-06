@@ -2,8 +2,9 @@ use crate::{
     error_template::{AppError, ErrorTemplate},
     graphics::{clear_canvas, is_landscape},
     topic::{
-        consistent_hashing::ConsistentHashingComponent, geo_hash::GeoHashComponent,
-        two_phase::two_phase_commit::TwoPhaseCommit, uber::uber_component::UberComponent,
+        client_server::ClientServerModeComponent, consistent_hashing::ConsistentHashingComponent,
+        geo_hash::GeoHashComponent, two_phase::two_phase_commit::TwoPhaseCommit,
+        uber::uber_component::UberComponent,
     },
 };
 use leptos::*;
@@ -36,7 +37,7 @@ pub fn App() -> impl IntoView {
             <Route path="/geo-hash" view=GeoHashComponent/>
             <Route path="/uber" view=UberComponent/>
             <Route path="/consistent-hashing" view=ConsistentHashingComponent/>
-            // <Route path="/server-client" view=/>
+            <Route path="/client-server" view=ClientServerModeComponent/>
         </Routes>
         </Router>
 
@@ -53,7 +54,7 @@ fn HomePage() -> impl IntoView {
         ("/consistent-hashing", "Consistenet Hashing"),
         // ("/caching", "Caching"),
         // ("/gossip", "Gossip"),
-        // ("/client-server", "ClientServer") // polling, long polling, server side events, web-socet
+        // ("/client-server", "Client Server Modes"),
         ("/uber", "Uber"),
     ];
     view! {
@@ -71,7 +72,7 @@ fn HomePage() -> impl IntoView {
                         <h1> System Design </h1>
                         <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI  </a>
                         <br/>
-                        System Desing on high level with interactive UI. I hope to make learning experience easy and enjoyable.
+                        An interactive take on system design.
                     </div>
                 })
             }
@@ -89,7 +90,7 @@ fn HomePage() -> impl IntoView {
             is_landscape().then(move || view! {
                 <div id="second" style="display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;">
                     <h1> System Design </h1>
-                    System Desing on high level with interactive UI. I hope to make learning experience easy and enjoyable.
+                    An interactive take on system design.
                     <br/>
                     <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI </a>
                 </div>

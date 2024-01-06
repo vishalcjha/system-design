@@ -1,6 +1,6 @@
 use std::cell::Cell;
 
-use super::{ComputeStatusChanger, PositionHolder};
+use super::{ComputeStatusChanger, TwoPhasePositions};
 use crate::{
     graphics::draw_lines_concurrently,
     model::arrow::{Arrow, Directional, Edge, Offset},
@@ -14,8 +14,12 @@ pub(super) struct AllGoodScenario {
 }
 
 impl AllGoodScenario {
+    pub(super) const NAME: &'static str = "AllGood";
+}
+
+impl AllGoodScenario {
     pub(super) fn new() -> AllGoodScenario {
-        let positions = PositionHolder::default();
+        let positions = TwoPhasePositions::default();
 
         let server_pos = positions.server_pos();
         let client_one_pos = positions.client_one_pos();
@@ -75,6 +79,10 @@ impl Scenario for AllGoodScenario {
 
     fn is_playing(&self) -> bool {
         todo!()
+    }
+
+    fn name(&self) -> &'static str {
+        AllGoodScenario::NAME
     }
 }
 

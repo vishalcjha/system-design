@@ -1,14 +1,9 @@
-use std::collections::HashMap;
-
-use crate::{
-    graphics::find_element_pos,
-    model::{
-        compute::{Compute, Pos},
-        dom_position::DomPosition,
-    },
+use crate::model::{
+    compute::{Compute, Pos},
+    dom_position::DomPosition,
 };
 
-use super::scenario::Scenario;
+use super::{scenario::Scenario, util::position_holder::PositionHolder};
 
 mod all_good_scenario;
 mod client_deny_scenario;
@@ -16,49 +11,48 @@ pub mod one_client_down;
 pub mod server_down;
 pub mod two_phase_commit;
 
-#[derive(Debug, Clone)]
-pub(crate) struct PositionHolder {
-    pub positions: HashMap<String, DomPosition>,
+struct TwoPhasePositions {
+    position_holder: PositionHolder,
 }
 
-impl PositionHolder {
-    const SERVER: &'static str = "Server";
-    const CLIENT_ONE: &'static str = "Client1";
-    const CLIENT_TWO: &'static str = "Client2";
+impl TwoPhasePositions {
+    const SERVER: &'static str = "Orchestrator";
+    const CLIENT_ONE: &'static str = "Service1";
+    const CLIENT_TWO: &'static str = "Service2";
 }
 
-impl Default for PositionHolder {
+impl Default for TwoPhasePositions {
     fn default() -> Self {
-        let server_pos = find_element_pos(PositionHolder::SERVER);
-        let client_one_pos = find_element_pos(PositionHolder::CLIENT_ONE);
-        let client_two_pos = find_element_pos(PositionHolder::CLIENT_TWO);
-
-        let positions = HashMap::from([
-            (String::from(PositionHolder::SERVER), server_pos.unwrap()),
-            (
-                String::from(PositionHolder::CLIENT_ONE),
-                client_one_pos.unwrap(),
-            ),
-            (
-                String::from(PositionHolder::CLIENT_TWO),
-                client_two_pos.unwrap(),
-            ),
-        ]);
-
-        PositionHolder { positions }
+        Self {
+            position_holder: PositionHolder::new(vec![
+                String::from(TwoPhasePositions::SERVER),
+                String::from(TwoPhasePositions::CLIENT_ONE),
+                String::from(TwoPhasePositions::CLIENT_TWO),
+            ]),
+        }
     }
 }
-impl PositionHolder {
+
+impl TwoPhasePositions {
     pub(super) fn server_pos(&self) -> &DomPosition {
-        self.positions.get(PositionHolder::SERVER).unwrap()
+        self.position_holder
+            .positions
+            .get(TwoPhasePositions::SERVER)
+            .unwrap()
     }
 
     pub(super) fn client_one_pos(&self) -> &DomPosition {
-        self.positions.get(PositionHolder::CLIENT_ONE).unwrap()
+        self.position_holder
+            .positions
+            .get(TwoPhasePositions::CLIENT_ONE)
+            .unwrap()
     }
 
     pub(super) fn client_two_pos(&self) -> &DomPosition {
-        self.positions.get(PositionHolder::CLIENT_TWO).unwrap()
+        self.position_holder
+            .positions
+            .get(TwoPhasePositions::CLIENT_TWO)
+            .unwrap()
     }
 }
 
@@ -71,16 +65,16 @@ trait ComputeStatusChanger: Scenario {
 fn get_computes() -> Vec<(String, Compute)> {
     let stable_computes = vec![
         (
-            String::from(PositionHolder::CLIENT_ONE),
-            Compute::new_client(Pos(4, 1), 1),
+            String::from(TwoPhasePositions::CLIENT_ONE),
+            Compute::new_client(Pos(4, 1), 1, Some(String::from("Service"))),
         ),
         (
-            String::from(PositionHolder::SERVER),
-            Compute::new_server(Pos(4, 4)),
+            String::from(TwoPhasePositions::SERVER),
+            Compute::new_server(Pos(4, 4), Some(String::from("Orchestrator"))),
         ),
         (
-            String::from(PositionHolder::CLIENT_TWO),
-            Compute::new_client(Pos(4, 8), 2),
+            String::from(TwoPhasePositions::CLIENT_TWO),
+            Compute::new_client(Pos(4, 8), 2, Some(String::from("Service"))),
         ),
     ];
     stable_computes

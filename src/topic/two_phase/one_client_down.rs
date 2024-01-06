@@ -1,6 +1,6 @@
 use std::cell::Cell;
 
-use super::{get_computes, ComputeStatusChanger, PositionHolder};
+use super::{get_computes, ComputeStatusChanger, TwoPhasePositions};
 use crate::{
     graphics::draw_lines_concurrently,
     model::arrow::{Arrow, Directional, Edge, Offset},
@@ -14,8 +14,12 @@ pub(super) struct OneClientDown {
 }
 
 impl OneClientDown {
+    pub(super) const NAME: &'static str = "OneClientDown";
+}
+
+impl OneClientDown {
     pub(super) fn new() -> OneClientDown {
-        let positions = PositionHolder::default();
+        let positions = TwoPhasePositions::default();
 
         let server_pos = positions.server_pos();
         let client_one_pos = positions.client_one_pos();
@@ -77,6 +81,10 @@ impl Scenario for OneClientDown {
     fn is_playing(&self) -> bool {
         todo!()
     }
+
+    fn name(&self) -> &'static str {
+        OneClientDown::NAME
+    }
 }
 
 impl ComputeStatusChanger for OneClientDown {
@@ -89,7 +97,7 @@ impl ComputeStatusChanger for OneClientDown {
                 computes
                     .iter()
                     .map(|compute| match compute.1.compute_type {
-                        crate::model::compute::ComputeType::Client(which) if which == 2 => {
+                        crate::model::compute::ComputeType::Client(which, _) if which == 2 => {
                             let mut down_client = compute.1.clone();
                             down_client.to_down_compute();
                             (compute.0.clone(), down_client)

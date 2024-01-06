@@ -17,19 +17,19 @@ pub struct Compute {
 }
 
 impl Compute {
-    pub fn new_server(pos: Pos) -> Compute {
+    pub fn new_server(pos: Pos, name: Option<String>) -> Compute {
         Compute {
             pos,
             status: Status::Up,
-            compute_type: ComputeType::Server,
+            compute_type: ComputeType::Server(name),
         }
     }
 
-    pub fn new_client(pos: Pos, num: u32) -> Compute {
+    pub fn new_client(pos: Pos, num: u32, name: Option<String>) -> Compute {
         Compute {
             pos,
             status: Status::Up,
-            compute_type: ComputeType::Client(num),
+            compute_type: ComputeType::Client(num, name),
         }
     }
 
@@ -40,6 +40,6 @@ impl Compute {
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum ComputeType {
-    Server,
-    Client(u32),
+    Server(Option<String>),
+    Client(u32, Option<String>),
 }

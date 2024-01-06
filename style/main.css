@@ -222,7 +222,7 @@ select {
 /* Square Card Styles */
 .square-card {
 	position: relative;
-	width: 60px;
+	width: 65px;
 	/* Default width */
 	height: 100px;
 	/* Default height */
@@ -255,8 +255,9 @@ select {
 	position: absolute;
 	top: 90%;
 	left: 50%;
+	width: fit-content;
 	transform: translate(-50%, -50%);
-	font-size: 1em;
+	font-size: .70em;
 	color: #000;
 	/* Icon color */
 }

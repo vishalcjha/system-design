@@ -90,12 +90,45 @@ pub fn GeoHashComponent() -> impl IntoView {
             </div>
             </div>
 
-            <div id="second" style="flex: 1; height: 100%">
+            <div id="second" style="flex:1;min-height: 0;">
                 <Show
                     when=move || clicked()
-                    fallback=move || view! {<p> Click in bounded rectangle to find Geo Hash. </p>}
+                    fallback=move || view! {
+                        <div style="text-align:center;align-self:center;justify-content:center;">
+                        <h3> Click anywhere in <Show
+                                        when=move || is_landscape()
+                                        fallback= move || view! { top }>
+                                        left
+                                    </Show>
+                            bounded rectangle  to find Geo Hash.</h3>
+                        </div>
+                    }
                 >
-                <p> Describe Geo Hash {clicked_pos()} </p>
+                <div>
+                <p> Location And GeoHash is <b> {clicked_pos()}  </b> </p>
+                <p>
+                    <h3> GeoHash Algorithm: A High-Level Overview </h3>
+                    GeoHash algorithm gives a transformation of GeoLocation defined by Longiture and Latitude to a String value.
+                    This transformation reduces 2 dimensional search space to single dimension.
+                    In this demo we are using Base32, i.e. a character of GeoHash string can have 32 values.
+                </p>
+
+                <p>
+                    <h3> Applications: Finding Nearby Points of Interest </h3>
+                    GeoHash finds extensive usage in scenarios where discovering nearby points of interest is crucial.
+                    Whether it is locating nearby restaurants, finding friends in the vicinity, or efficiently matching a rider with an Uber driver,
+                    GeoHash simplifies the process by assigning similar prefixes to nearby locations.
+                </p>
+
+                <p>
+                <h3> Precision and Exploration </h3>
+                For an interactive experience, explore nearby areas by clicking nearby on your screen. Try with precision 1 and 2 to see changes.
+                Percison more than 2 is hard to visualize given world map fit on this half screen.
+                You will notice that nearby locations often share the same GeoHash or at least have a common prefix.
+                However, in some instances, the GeoHash values may differ significantly.
+                To address this, when solving the "Find Nearby Points of Interest" problem, neighboring GeoHashes are also considered.
+                </p>
+                </div>
                 </Show>
             </div>
         </div>
