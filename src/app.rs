@@ -70,9 +70,10 @@ fn HomePage() -> impl IntoView {
                 (!is_landscape()).then(move || view! {
                     <div id="second" style="align-self:center;order:20;position:fixed;bottom:0;margin-bottom: 5px;">
                         <h1> System Design </h1>
-                        <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI  </a>
+                        <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI  </a><br/>
+                        <a href="https://github.com/vishalcjha/system-design"> Source Code </a>
                         <br/>
-                        An interactive take on system design.
+                        An interactive take on system design. It is build using leptos and Rust.
                     </div>
                 })
             }
@@ -90,9 +91,10 @@ fn HomePage() -> impl IntoView {
             is_landscape().then(move || view! {
                 <div id="second" style="display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;">
                     <h1> System Design </h1>
-                    An interactive take on system design.
+                    An interactive take on system design. It is build using leptos and Rust.
                     <br/>
-                    <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI </a>
+                    <a href="https://www.linkedin.com/in/vishal-kumar-46455425/"> Connect on LI </a> <br/>
+                    <a href="https://github.com/vishalcjha/system-design"> Source Code </a>
                 </div>
             })
         }
